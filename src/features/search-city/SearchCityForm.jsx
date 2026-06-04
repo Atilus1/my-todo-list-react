@@ -4,19 +4,15 @@ import Button from '@/shared/ui/Button'
 const SearchCityForm = (props) => {
   const { 
     styles,
-    addCity,
     newCityTitle,
     setNewCityTitle,
     getWither,
-    API_Key1,
-    API_Key2,
   } = props
 
 
   const onSubmitCity = (event) => {
     event.preventDefault()
-    getWither(newCityTitle, API_Key1, API_Key2)
-      addCity()
+    getWither()
   }
 
   return (

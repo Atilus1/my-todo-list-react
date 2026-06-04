@@ -5,6 +5,7 @@ const TaskPage = (props) => {
   const { params } = props
   const taskId = params.id
 
+
   const [task, setTask] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -21,6 +22,7 @@ const TaskPage = (props) => {
       .finally(() => {
         setIsLoading(false)
       })
+      
   }, [])
 
   if (isLoading) {
@@ -35,6 +37,7 @@ const TaskPage = (props) => {
     <div>
       <h1>{task.title}</h1>
       <p>{task.isDone ? 'Задача выполнена' : 'Задача не выполнена'}</p>
+      <p>{task.difficulty == "none" || undefined ? "Сложность не установлена" : `Сложность: ${task.difficulty}`}</p>
     </div>
   )
 }

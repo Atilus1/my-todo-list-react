@@ -8,10 +8,10 @@ import { TasksContext } from '@/entities/todo'
 import styles from './Todo.module.scss'
 
 const Todo = () => {
-  const { firstIncompleteTaskRef } = useContext(TasksContext)
+  const { firstIncompleteTaskRef, editingTaskId } = useContext(TasksContext)
 
   return (
-    <div className={styles.todo}>
+    <div className={`${styles.todo} ${editingTaskId ? styles.todoExpanded : ''}`}>
       <h1 className={styles.title}>Список дел</h1>
       <AddTaskForm styles={styles} />
       <SearchTaskForm styles={styles} />

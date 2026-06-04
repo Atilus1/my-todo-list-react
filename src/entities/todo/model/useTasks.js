@@ -16,6 +16,13 @@ const tasksReducer = (state, action) => {
         return task.id === id ? { ...task, isDone } : task
       })
     }
+    case 'UPDATE_TITLE': {
+      const { id, title } = action
+
+      return state.map((task) => {
+        return task.id === id ? { ...task, title } : task
+      })
+    }
     case 'DELETE': {
       return state.filter((task) => task.id !== action.id)
     }
@@ -31,15 +38,24 @@ const tasksReducer = (state, action) => {
 const useTasks = () => {
   const [tasks, dispatch] = useReducer(tasksReducer, [])
 
+  let globalBalance = localStorage.getItem('balance') || 0
+  let [balance, setBalance] = useState(+globalBalance)
+  localStorage.setItem('balance', balance)
+
   const [newTaskTitle, setNewTaskTitle] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [disappearingTaskId, setDisappearingTaskId] = useState(null)
   const [appearingTaskId, setAppearingTaskId] = useState(null)
 
+  let [isActive, setIsActive] = useState(false);
+  let [isActive2, setIsActive2] = useState(false);
+  let [isActive3, setIsActive3] = useState(false);
+  let [difficulty, setDifficulty] = useState("★");
+
   const newTaskInputRef = useRef(null)
 
   const deleteAllTasks = useCallback(() => {
-    const isConfirmed = confirm('Are you sure you want to delete all?')
+    const isConfirmed = confirm('Вы уверены что хотите удалить все задачи?')
 
     if (isConfirmed) {
       tasksAPI.deleteAll(tasks)
@@ -65,10 +81,18 @@ const useTasks = () => {
       })
   }, [])
 
-  const addTask = useCallback((title) => {
+  const updateTaskTitle = useCallback((taskId, title) => {
+    tasksAPI.updateTitle(taskId, title)
+      .then(() => {
+        dispatch({ type: 'UPDATE_TITLE', id: taskId, title })
+      })
+  }, [])
+
+  const addTask = useCallback((title, difficulty) => {
     const newTask = {
       title,
       isDone: false,
+      difficulty,
     }
 
     tasksAPI.add(newTask)
@@ -100,12 +124,54 @@ const useTasks = () => {
       : null
   }, [searchQuery, tasks])
 
+/*   const filteredItems = useMemo(() => {
+    const clearSearchQuery = searchQuery.trim().toLowerCase()
+
+    return clearSearchQuery.length > 0
+      ? items.filter(({ name }) => name.toLowerCase().includes(clearSearchQuery))
+      : null
+  }, [searchQuery, items]) */
+
+   /*  Добавить сложность логика */
+
+  const handleClick = useCallback(() => {
+    if (isActive != true && isActive2 != true && isActive3 != true) {
+    setIsActive(isActive = true); 
+    setDifficulty("Легкая ⭐")
+    console.log(difficulty)
+    } else { 
+      setIsActive(isActive = false);
+      console.log(difficulty)
+    }
+  }, [isActive, isActive2, isActive3]);
+  const handleClick2 = useCallback(() => {
+    if (isActive2 != true && isActive != true && isActive3 != true) {
+    setIsActive2(isActive2 = true);
+    setDifficulty("Средняя ⭐⭐")
+    console.log(difficulty) 
+    } else { 
+      setIsActive2(isActive2 = false);
+      console.log(difficulty)
+    }
+  }, [isActive, isActive2, isActive3]);
+  const handleClick3 = useCallback(() => {
+    if (isActive3 != true && isActive != true && isActive2 != true) {
+    setIsActive3(isActive3 = true); 
+    setDifficulty("Сложная ⭐⭐⭐")
+    console.log(difficulty)
+    } else { 
+      setIsActive3(isActive3 = false);
+      console.log(difficulty)
+    }
+  }, [isActive, isActive2, isActive3]);
+
   return {
     tasks,
     filteredTasks,
     deleteTask,
     deleteAllTasks,
     toggleTaskComplete,
+    updateTaskTitle,
     newTaskTitle,
     setNewTaskTitle,
     searchQuery,
@@ -114,6 +180,15 @@ const useTasks = () => {
     addTask,
     disappearingTaskId,
     appearingTaskId,
+    isActive,
+    isActive2,
+    isActive3,
+    handleClick,
+    handleClick2,
+    handleClick3,
+    difficulty,
+    balance,
+    setBalance,
   }
 }
 

@@ -1,4 +1,5 @@
 const URL = 'http://localhost:3001/tasks'
+const URL_ITEMS = 'http://localhost:3001/items'
 
 const headers = {
     'Content-Type': 'application/json',
@@ -7,6 +8,10 @@ const headers = {
 const serverAPI = {
     getAll: () => {
         return fetch(URL).then((response) => response.json())
+    },
+    
+    getAllItems: () => {
+        return fetch(URL_ITEMS).then((response) => response.json())
     },
 
     getById: (id) => {
@@ -38,6 +43,14 @@ const serverAPI = {
             method: 'PATCH',
             headers,
             body: JSON.stringify({ isDone })
+        })
+    },
+
+    updateTitle: (id, title) => {
+        return fetch(`${URL}/${id}`, {
+            method: 'PATCH',
+            headers,
+            body: JSON.stringify({ title }),
         })
     },
 }

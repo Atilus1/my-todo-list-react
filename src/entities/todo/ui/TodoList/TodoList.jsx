@@ -13,11 +13,11 @@ const TodoList = (props) => {
   const isEmptyFilteredTasks = filteredTasks?.length === 0
 
   if (!hasTasks) {
-    return <div className={styles.emptyMessage}>There are no tasks yet</div>
+    return <div className={styles.emptyMessage}>Пока нет задач</div>
   }
 
   if (hasTasks && isEmptyFilteredTasks) {
-    return <div className={styles.emptyMessage}>Tasks not found</div>
+    return <div className={styles.emptyMessage}>Задача не найдена</div>
   }
 
   return (

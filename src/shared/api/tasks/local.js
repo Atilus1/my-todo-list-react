@@ -1,4 +1,5 @@
 const STORAGE_KEY = 'tasks'
+const STORAGE_KEY_ITEMS = 'items'
 
 const read = () => {
     try {
@@ -7,8 +8,16 @@ const read = () => {
         return []
     }
 }
-const write = (tasks) => {
+const readItems = () => {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY_ITEMS) || '[]')
+    } catch (error) {
+        return []
+    }
+}
+const write = (tasks, items) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+    localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(items))
 }
 const delay = (ms = 150) => {
     return new Promise((resolve) => setTimeout(resolve, ms))
@@ -19,6 +28,12 @@ const localAPI = {
         await delay()
 
         return read()
+    },
+
+    getAllItems: async () => {
+        await delay()
+
+        return readItems()
     },
     
     getById: async (id) => {
@@ -61,6 +76,17 @@ const localAPI = {
         const tasks = read()
         .map((task) => {
             return task.id === id ? {...task, isDone} : task
+        })
+
+        write(tasks)
+    },
+
+    updateTitle: async (id, title) => {
+        await delay()
+
+        const tasks = read()
+        .map((task) => {
+            return task.id === id ? { ...task, title } : task
         })
 
         write(tasks)
